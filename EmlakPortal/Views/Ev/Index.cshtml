@@ -22,6 +22,10 @@ else
         <thead>
             <tr>
                 <th>
+                    Resim
+
+                </th>
+                <th>
                     Açıklama (Başlık)
                 </th>
                 <th>
@@ -39,10 +43,20 @@ else
             {
                 <tr>
                     <td>
+                        @if (!string.IsNullOrEmpty(item.ResimUrl))
+                        {
+                            <img src="@item.ResimUrl" alt="@item.Baslik" style="width: 100px; height: 75px; object-fit: cover; border-radius: 5px;" />
+                        }
+                        else
+                        {
+                            <span class="text-muted">Resim Yok</span>
+                        }
+                    </td>
+                    <td>
                         @Html.DisplayFor(modelItem => item.Baslik)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Fiyat)
+                        @item.Fiyat.ToString("N2")
                     </td>
                     <td>
                     </td>

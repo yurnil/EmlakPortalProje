@@ -1,0 +1,49 @@
+﻿@model EmlakPortal.Models.Ev
+
+@{
+    ViewData["Title"] = "İlan Detayı";
+}
+
+<h1>@Model.Baslik</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dd class="col-sm-12 mb-4">
+            @if (!string.IsNullOrEmpty(Model.ResimUrl))
+            {
+                <img src="@Model.ResimUrl" alt="@Model.Baslik" style="max-width: 500px; max-height: 400px; border-radius: 10px;" />
+            }
+            else
+            {
+                <div class="alert alert-secondary">Resim Yok</div>
+            }
+        </dd>
+
+        <dt class="col-sm-2">
+            Fiyat:
+        </dt>
+        <dd class="col-sm-10 font-weight-bold">
+            <h3>@Model.Fiyat.ToString("N2") ₺</h3>
+        </dd>
+
+        <dt class="col-sm-2">
+            Adres:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Adres)
+        </dd>
+
+        <dt class="col-sm-2">
+            Açıklama:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Aciklama)
+        </dd>
+    </dl>
+</div>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Düzenle</a> |
+    <a asp-action="Index" class="btn btn-secondary">Listeye Dön</a>
+</div>
