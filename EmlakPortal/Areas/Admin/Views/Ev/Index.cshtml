@@ -1,0 +1,48 @@
+﻿@model IEnumerable<EmlakPortal.Models.Ev>
+
+@{
+    ViewData["Title"] = "İlan Yönetimi";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>🏠 İlan Yönetimi</h1>
+    <a href="/Admin/Ev/Create" class="btn btn-success">+ Yeni İlan Ekle</a>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <table class="table table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Resim</th>
+                    <th>Başlık</th>
+                    <th>Fiyat</th>
+                    <th>İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.ResimUrl))
+                            {
+                                <img src="@item.ResimUrl" style="width: 60px; height: 45px; object-fit: cover; border-radius: 4px;" />
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Yok</span>
+                            }
+                        </td>
+                        <td>@item.Baslik</td>
+                        <td>@item.Fiyat.ToString("N2") ₺</td>
+                        <td>
+                            <a href="#" class="btn btn-sm btn-warning">✏️ Düzenle</a>
+                            <a href="#" class="btn btn-sm btn-danger">🗑️ Sil</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

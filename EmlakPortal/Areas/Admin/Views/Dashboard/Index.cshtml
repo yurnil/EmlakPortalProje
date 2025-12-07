@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "Kontrol Paneli";
+    // Artık özel Admin Layout'umuzu kullanıyoruz
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h1 class="display-5">Hoşgeldiniz!</h1>
+        <p class="lead">Sol taraftaki menüyü kullanarak siteyi yönetebilirsiniz.</p>
+
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <div class="alert alert-info">
+                    <h4>🏠 İlanlar</h4>
+                    <p>Sisteme kayıtlı ilanları buradan yönetin.</p>
+                    <a href="/Admin/Ev" class="btn btn-primary btn-sm">İlanlara Git</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

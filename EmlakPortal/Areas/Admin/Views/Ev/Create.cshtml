@@ -1,0 +1,56 @@
+﻿@model EmlakPortal.Models.Ev
+
+@{
+    ViewData["Title"] = "Yeni İlan Ekle";
+}
+
+<div class="card shadow-sm">
+    <div class="card-header bg-success text-white">
+        <h5 class="mb-0">🏠 Yeni İlan Ekle</h5>
+    </div>
+    <div class="card-body">
+        <form asp-action="Create" method="post">
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="mb-3">
+                        <label asp-for="Baslik" class="form-label">İlan Başlığı</label>
+                        <input asp-for="Baslik" class="form-control" placeholder="Örn: Satılık Lüks Daire" />
+                        <span asp-validation-for="Baslik" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Aciklama" class="form-label">Açıklama</label>
+                        <textarea asp-for="Aciklama" class="form-control" rows="5"></textarea>
+                        <span asp-validation-for="Aciklama" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Adres" class="form-label">Adres</label>
+                        <input asp-for="Adres" class="form-control" />
+                        <span asp-validation-for="Adres" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label asp-for="Fiyat" class="form-label">Fiyat (₺)</label>
+                        <input asp-for="Fiyat" class="form-control" />
+                        <span asp-validation-for="Fiyat" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="ResimUrl" class="form-label">Resim URL</label>
+                        <input asp-for="ResimUrl" class="form-control" placeholder="https://..." />
+                        <span asp-validation-for="ResimUrl" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success">💾 Kaydet</button>
+                        <a asp-action="Index" class="btn btn-secondary">İptal</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
