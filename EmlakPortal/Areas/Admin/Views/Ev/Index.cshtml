@@ -37,8 +37,8 @@
                         <td>@item.Baslik</td>
                         <td>@item.Fiyat.ToString("N2") ₺</td>
                         <td>
-                            <a href="#" class="btn btn-sm btn-warning">✏️ Düzenle</a>
-                            <a href="#" class="btn btn-sm btn-danger">🗑️ Sil</a>
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">✏️ Düzenle</a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">🗑️ Sil</a>
                         </td>
                     </tr>
                 }
