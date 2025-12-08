@@ -147,5 +147,21 @@ namespace EmlakPortal.Areas.Admin.Controllers
             }
             return RedirectToAction("Index");
         }
+        // Admin/Ev/SilAjax
+        [HttpPost]
+        public IActionResult SilAjax(int id)
+        {
+            var ev = _evRepository.GetById(id);
+            if (ev == null)
+            {
+                return Json(new { success = false, message = "Kayıt bulunamadı." });
+            }
+
+            _evRepository.Delete(ev);
+            _context.SaveChanges();
+
+            // İşlem başarılı mesajı gönderiyoruz
+            return Json(new { success = true });
+        }
     }
 }

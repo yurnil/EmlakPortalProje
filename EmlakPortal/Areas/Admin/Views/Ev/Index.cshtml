@@ -25,7 +25,9 @@
             <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr>
+                    // ÖNEMLİ: Satıra (tr) benzersiz bir ID verdik (row_1, row_2 vb.)
+                    // Böylece AJAX ile sildiğimizde bu satırı bulup yok edebileceğiz.
+                    <tr id="row_@item.Id">
                         <td>
                             @if (!string.IsNullOrEmpty(item.ResimUrl))
                             {
@@ -42,7 +44,8 @@
                         <td>@item.Fiyat.ToString("N2") ₺</td>
                         <td>
                             <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">✏️ Düzenle</a>
-                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">🗑️ Sil</a>
+
+                            <a href="javascript:void(0);" onclick="sil(@item.Id)" class="btn btn-sm btn-danger">🗑️ Sil (AJAX)</a>
                         </td>
                     </tr>
                 }
@@ -50,3 +53,57 @@
         </table>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    function sil(id) {
+        // 1. Kullanıcıya soralım
+        Swal.fire({
+            title: 'Emin misiniz?',
+            text: "Bu ilanı silmek istediğinize emin misiniz? Geri alınamaz!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Evet, Sil!',
+            cancelButtonText: 'Vazgeç'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // 2. Arka planda silme isteği gönder
+                $.ajax({
+                    type: "POST",
+                    url: "/Admin/Ev/SilAjax/" + id, // Controller'a istek atar
+                    success: function (result) {
+                        if (result.success) {
+                            // 3. Başarılıysa HTML tablosundan o satırı kaldır
+                            $("#row_" + id).fadeOut(500, function() {
+                                $(this).remove();
+                            });
+
+                            Swal.fire(
+                                'Silindi!',
+                                'İlan başarıyla silindi.',
+                                'success'
+                            )
+                        } else {
+                            Swal.fire(
+                                'Hata!',
+                                'Silme işlemi başarısız oldu.',
+                                'error'
+                            )
+                        }
+                    },
+                    error: function () {
+                        Swal.fire(
+                            'Hata!',
+                            'Sunucuyla bağlantı kurulamadı.',
+                            'error'
+                        )
+                    }
+                });
+            }
+        })
+    }
+</script>
