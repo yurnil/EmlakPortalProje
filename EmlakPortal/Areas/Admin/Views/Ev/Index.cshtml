@@ -16,6 +16,8 @@
                 <tr>
                     <th>Resim</th>
                     <th>Başlık</th>
+                    <th>Tür</th>
+                    <th>Durum</th>
                     <th>Fiyat</th>
                     <th>İşlemler</th>
                 </tr>
@@ -35,6 +37,8 @@
                             }
                         </td>
                         <td>@item.Baslik</td>
+                        <td><span class="badge bg-info text-dark">@item.IlanTur?.Ad</span></td>
+                        <td><span class="badge bg-secondary">@item.IlanDurum?.Ad</span></td>
                         <td>@item.Fiyat.ToString("N2") ₺</td>
                         <td>
                             <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">✏️ Düzenle</a>

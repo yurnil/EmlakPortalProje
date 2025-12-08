@@ -14,6 +14,20 @@
 
             <div class="row">
                 <div class="col-md-8">
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="IlanTurId" class="form-label">İlan Türü</label>
+                            <select asp-for="IlanTurId" class="form-select" asp-items="ViewBag.Turler"></select>
+                            <span asp-validation-for="IlanTurId" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="IlanDurumId" class="form-label">İlan Durumu</label>
+                            <select asp-for="IlanDurumId" class="form-select" asp-items="ViewBag.Durumlar"></select>
+                            <span asp-validation-for="IlanDurumId" class="text-danger"></span>
+                        </div>
+                    </div>
+
                     <div class="mb-3">
                         <label asp-for="Baslik" class="form-label">İlan Başlığı</label>
                         <input asp-for="Baslik" class="form-control" />
@@ -45,6 +59,14 @@
                         <input asp-for="ResimUrl" class="form-control" />
                         <span asp-validation-for="ResimUrl" class="text-danger"></span>
                     </div>
+
+                    @if (!string.IsNullOrEmpty(Model.ResimUrl))
+                    {
+                        <div class="mb-3 text-center">
+                            <img src="@Model.ResimUrl" style="max-width: 100%; height: auto; border-radius: 5px;" />
+                            <small class="text-muted d-block mt-1">Mevcut Resim</small>
+                        </div>
+                    }
 
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-warning">💾 Güncelle</button>

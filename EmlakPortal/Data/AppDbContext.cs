@@ -9,6 +9,8 @@ namespace EmlakPortal.Data
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         public DbSet<Ev> Evler { get; set; }
+        public DbSet<IlanTur> IlanTurleri { get; set; }
+        public DbSet<IlanDurum> IlanDurumlari { get; set; }
         // Bu metod, EF Core'a veritabanını nasıl oluşturacağını söyler.
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

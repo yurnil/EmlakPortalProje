@@ -13,6 +13,24 @@
 
             <div class="row">
                 <div class="col-md-8">
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="IlanTurId" class="form-label">İlan Türü</label>
+                            <select asp-for="IlanTurId" class="form-select" asp-items="ViewBag.Turler">
+                                <option value="">-- Tür Seçiniz --</option>
+                            </select>
+                            <span asp-validation-for="IlanTurId" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="IlanDurumId" class="form-label">İlan Durumu</label>
+                            <select asp-for="IlanDurumId" class="form-select" asp-items="ViewBag.Durumlar">
+                                <option value="">-- Durum Seçiniz --</option>
+                            </select>
+                            <span asp-validation-for="IlanDurumId" class="text-danger"></span>
+                        </div>
+                    </div>
+
                     <div class="mb-3">
                         <label asp-for="Baslik" class="form-label">İlan Başlığı</label>
                         <input asp-for="Baslik" class="form-control" placeholder="Örn: Satılık Lüks Daire" />
