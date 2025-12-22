@@ -9,7 +9,7 @@
         <h5 class="mb-0">🏠 Yeni İlan Ekle</h5>
     </div>
     <div class="card-body">
-        <form asp-action="Create" method="post">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
 
             <div class="row">
                 <div class="col-md-8">
@@ -58,9 +58,8 @@
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="ResimUrl" class="form-label">Resim URL</label>
-                        <input asp-for="ResimUrl" class="form-control" placeholder="https://..." />
-                        <span asp-validation-for="ResimUrl" class="text-danger"></span>
+                        <label class="form-label">İlan Resmi</label>
+                        <input type="file" name="resimDosyasi" class="form-control" accept="image/*" />
                     </div>
 
                     <div class="d-grid gap-2">

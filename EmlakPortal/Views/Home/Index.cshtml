@@ -1,8 +1,60 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Ana Sayfa";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="p-5 mb-4 bg-light rounded-3" style="background-image: url('https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1920&q=80'); background-size: cover; background-position: center; height: 500px; position: relative;">
+    <div class="container-fluid py-5 text-white" style="background-color: rgba(0,0,0,0.5); border-radius: 10px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; width: 80%;">
+        <h1 class="display-5 fw-bold">Hayalinizdeki Evi Keşfedin</h1>
+        <p class="fs-4">En uygun fiyatlı satılık ve kiralık daireler EmlakPortal'da.</p>
+        <a href="/Ev" class="btn btn-primary btn-lg mt-3">İlanları İncele</a>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Son Eklenen İlanlar</h2>
+    <div class="row">
+
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 shadow-sm">
+                <img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=500" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Lüks Villa - İstanbul</h5>
+                    <p class="card-text text-muted">Deniz manzaralı, havuzlu muhteşem villa.</p>
+                    <h6 class="text-primary">15.000.000 ₺</h6>
+                </div>
+                <div class="card-footer bg-white border-top-0">
+                    <button class="btn btn-outline-primary btn-sm w-100">Detaylar</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 shadow-sm">
+                <img src="https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=500" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Merkezi Daire - Ankara</h5>
+                    <p class="card-text text-muted">Kızılay merkeze yürüme mesafesinde 3+1.</p>
+                    <h6 class="text-primary">3.500.000 ₺</h6>
+                </div>
+                <div class="card-footer bg-white border-top-0">
+                    <button class="btn btn-outline-primary btn-sm w-100">Detaylar</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 shadow-sm">
+                <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b91d?w=500" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Bahçeli Müstakil - İzmir</h5>
+                    <p class="card-text text-muted">Urla'da doğa ile iç içe huzurlu yaşam.</p>
+                    <h6 class="text-primary">8.250.000 ₺</h6>
+                </div>
+                <div class="card-footer bg-white border-top-0">
+                    <button class="btn btn-outline-primary btn-sm w-100">Detaylar</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </div>

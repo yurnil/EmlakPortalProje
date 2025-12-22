@@ -1,6 +1,4 @@
-﻿// EvController.cs
-
-using EmlakPortal.Data; // AppDbContext için bu gerekli
+﻿using EmlakPortal.Data; // AppDbContext için bu gerekli
 using EmlakPortal.Models; // Ev modeli için bu gerekli
 using EmlakPortal.Repositories; // IRepository için bu gerekli
 using Microsoft.AspNetCore.Mvc;
@@ -14,13 +12,10 @@ namespace EmlakPortal.Controllers
         // Bu, veritabanı işlemlerimizi yapacak (Listele, Ekle, Sil, Güncelle)
         private readonly IRepository<Ev> _evRepository;
 
-        // Bu, EF Core'un değişiklikleri veritabanına kaydetmesi (COMMIT) için
-        // geçici olarak gereklidir.
+        // EF Core'un değişiklikleri veritabanına kaydetmesi (COMMIT) için
         private readonly AppDbContext _context;
 
         // 2. "Constructor" (Yapıcı Metot)
-        // Program.cs'te yaptığımız ayar sayesinde, bu controller her çalıştığında
-        // .NET bize otomatik olarak bir IRepository<Ev> ve bir AppDbContext sağlayacak.
         public EvController(IRepository<Ev> evRepository, AppDbContext context)
         {
             _evRepository = evRepository;
@@ -39,14 +34,12 @@ namespace EmlakPortal.Controllers
         }
 
         // 1. GET: Ev/Create
-        // Bu metot, sadece boş formu ekrana getirir.
         public IActionResult Create()
         {
             return View();
         }
 
         // 2. POST: Ev/Create
-        // Bu metot, form doldurulup "Kaydet"e basılınca çalışır.
         [HttpPost]
         [ValidateAntiForgeryToken] // Güvenlik önlemi (sahte istekleri engeller)
         public IActionResult Create(Ev ev)

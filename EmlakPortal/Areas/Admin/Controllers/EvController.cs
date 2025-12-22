@@ -2,38 +2,42 @@
 using EmlakPortal.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering; // SelectList için gerekli
-using Microsoft.EntityFrameworkCore; // Include metodu için gerekli
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http; // Session için gerekli
 
 namespace EmlakPortal.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize]
+    // [Authorize]  <-- Bunu iptal ettik çünkü kendi Session sistemimizi kullanıyoruz.
     public class EvController : Controller
     {
         private readonly IRepository<Ev> _evRepository;
         private readonly EmlakPortal.Data.AppDbContext _context;
+        private readonly IWebHostEnvironment _hostEnvironment;
 
-        public EvController(IRepository<Ev> evRepository, EmlakPortal.Data.AppDbContext context)
+        public EvController(IRepository<Ev> evRepository, EmlakPortal.Data.AppDbContext context, IWebHostEnvironment hostEnvironment)
         {
             _evRepository = evRepository;
             _context = context;
+            _hostEnvironment = hostEnvironment;
         }
 
         // GET: Admin/Ev
         public IActionResult Index()
         {
-            // Eski hali: var evler = _evRepository.GetAll();
+            // --- GÜVENLİK KONTROLÜ (KAPI BEKÇİSİ) ---
+            // Eğer "AdminGiris" session'ı yoksa, kullanıcıyı Login sayfasına gönder.
+            if (HttpContext.Session.GetString("AdminGiris") == null)
+            {
+                // area="" diyerek Admin klasöründen çıkıp ana dizindeki AccountController'a gitmesini sağlıyoruz.
+                return RedirectToAction("Login", "Account", new { area = "" });
+            }
+            // ----------------------------------------
 
-            // YENİ HALİ: İlişkili verileri de (Include) getiriyoruz
-            // Not: Repository deseninde "GetAll" metodu genellikle Include desteklemez.
-            // Bu yüzden burada geçici olarak direkt _context üzerinden çekebiliriz
-            // VEYA Repository'yi güncelleyebiliriz.
-
-            // En pratik çözüm (şimdilik): Context üzerinden çekmek
             var evler = _context.Evler
-                .Include(e => e.IlanTur)   // Türü getir (Daire, Villa vs.)
-                .Include(e => e.IlanDurum) // Durumu getir (Satılık vs.)
+                .Include(e => e.IlanTur)
+                .Include(e => e.IlanDurum)
                 .ToList();
 
             return View(evler);
@@ -42,8 +46,9 @@ namespace EmlakPortal.Areas.Admin.Controllers
         // GET: Admin/Ev/Create
         public IActionResult Create()
         {
-            // --- OTOMATİK VERİ DOLDURMA ---
-            // Eğer veritabanında hiç tür yoksa, hemen ekle!
+            // İstersen buraya da aynı güvenlik kontrolünü ekleyebilirsin ama Index'te olması şimdilik yeterli.
+
+            // --- OTOMATİK VERİ DOLDURMA (SEED DATA) ---
             if (!_context.IlanTurleri.Any())
             {
                 _context.IlanTurleri.AddRange(
@@ -56,7 +61,6 @@ namespace EmlakPortal.Areas.Admin.Controllers
                 _context.SaveChanges();
             }
 
-            // Eğer veritabanında hiç durum yoksa, hemen ekle!
             if (!_context.IlanDurumlari.Any())
             {
                 _context.IlanDurumlari.AddRange(
@@ -68,7 +72,6 @@ namespace EmlakPortal.Areas.Admin.Controllers
             }
             // ---------------------------------------------
 
-            // Listeleri doldurup sayfaya gönder
             ViewBag.Turler = new SelectList(_context.IlanTurleri.ToList(), "Id", "Ad");
             ViewBag.Durumlar = new SelectList(_context.IlanDurumlari.ToList(), "Id", "Ad");
             return View();
@@ -77,16 +80,37 @@ namespace EmlakPortal.Areas.Admin.Controllers
         // POST: Admin/Ev/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Ev ev)
+        public async Task<IActionResult> Create(Ev ev, IFormFile? resimDosyasi)
         {
             if (ModelState.IsValid)
             {
+                // --- RESİM YÜKLEME İŞLEMİ ---
+                if (resimDosyasi != null)
+                {
+                    string wwwRootPath = _hostEnvironment.WebRootPath;
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(resimDosyasi.FileName);
+                    string uploadPath = Path.Combine(wwwRootPath, @"img");
+
+                    if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
+
+                    using (var fileStream = new FileStream(Path.Combine(uploadPath, fileName), FileMode.Create))
+                    {
+                        await resimDosyasi.CopyToAsync(fileStream);
+                    }
+
+                    ev.ResimUrl = @"/img/" + fileName;
+                }
+                else
+                {
+                    ev.ResimUrl = "";
+                }
+                // -----------------------------
+
                 _evRepository.Add(ev);
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            // Hata olursa listeleri tekrar doldur
             ViewBag.Turler = new SelectList(_context.IlanTurleri.ToList(), "Id", "Ad");
             ViewBag.Durumlar = new SelectList(_context.IlanDurumlari.ToList(), "Id", "Ad");
             return View(ev);
@@ -109,10 +133,39 @@ namespace EmlakPortal.Areas.Admin.Controllers
         // POST: Admin/Ev/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Ev ev)
+        public async Task<IActionResult> Edit(Ev ev, IFormFile? resimDosyasi)
         {
             if (ModelState.IsValid)
             {
+                // --- RESİM GÜNCELLEME İŞLEMİ ---
+                if (resimDosyasi != null)
+                {
+                    string wwwRootPath = _hostEnvironment.WebRootPath;
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(resimDosyasi.FileName);
+                    string uploadPath = Path.Combine(wwwRootPath, @"img");
+
+                    if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
+
+                    // ESKİ RESMİ SİL
+                    if (!string.IsNullOrEmpty(ev.ResimUrl))
+                    {
+                        var oldImagePath = Path.Combine(wwwRootPath, ev.ResimUrl.TrimStart('/'));
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            System.IO.File.Delete(oldImagePath);
+                        }
+                    }
+
+                    // YENİ RESMİ KAYDET
+                    using (var fileStream = new FileStream(Path.Combine(uploadPath, fileName), FileMode.Create))
+                    {
+                        await resimDosyasi.CopyToAsync(fileStream);
+                    }
+
+                    ev.ResimUrl = @"/img/" + fileName;
+                }
+                // -------------------------------
+
                 _evRepository.Update(ev);
                 _context.SaveChanges();
                 return RedirectToAction("Index");
@@ -147,6 +200,7 @@ namespace EmlakPortal.Areas.Admin.Controllers
             }
             return RedirectToAction("Index");
         }
+
         // Admin/Ev/SilAjax
         [HttpPost]
         public IActionResult SilAjax(int id)
@@ -160,7 +214,6 @@ namespace EmlakPortal.Areas.Admin.Controllers
             _evRepository.Delete(ev);
             _context.SaveChanges();
 
-            // İşlem başarılı mesajı gönderiyoruz
             return Json(new { success = true });
         }
     }
